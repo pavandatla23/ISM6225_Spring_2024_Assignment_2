@@ -7,6 +7,7 @@ WRITE YOUR CODE IN THE RESPECTIVE QUESTION FUNCTION BLOCK
 */
 
 using System.Text;
+using System.Xml.Linq;
 
 namespace ISM6225_Spring_2024_Assignment_2
 {
@@ -99,8 +100,32 @@ namespace ISM6225_Spring_2024_Assignment_2
         {
             try
             {
+
                 // Write your code here and you can modify the return value according to the requirements
-                return 0;
+                // corner case:If the array has 0 or 1 element, there are no duplicates to remove
+                if (nums.Length <= 1)
+                {
+                    return nums.Length;
+                }
+                  
+                // Initialize j to 1 because the first element is always unique
+                int j = 1;
+                // to find length of the array
+                int n = nums.Length;
+                // using for loop to iterate through array starting from second element
+                for (int i =1; i < n; i++) 
+                {
+                    // iam using this codition to check if the current element is not equal to previous element because this gives unquie element that can be stored back in array
+                    if (nums[i] != nums[i-1]) 
+                    {
+                        // storing unique element in the array
+                        nums[j] = nums[i];
+                        // incrementing j to count the unique elements
+                        j += 1;
+                    }
+                }
+                // returning final number of unique elements.
+                return j;
             }
             catch (Exception)
             {
@@ -134,8 +159,35 @@ namespace ISM6225_Spring_2024_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return new List<int>();
+                // corner case:If the array has 0 or 1 element, there are no zeros to move
+                if (nums.Length <= 1)
+                    return new List<int>(nums);
+
+                // initializing a variable to keep track of the position to place the  non zero elements;
+                int j = 0;
+                // using this to find the length of the array
+                int n = nums.Length;
+                // iterating through every element
+                for (int i = 0; i < n; i++) 
+                {
+                    // condition to check non zero element
+                    if (nums[i] != 0) 
+                    {
+                        // moving non zero element to front of the array 
+                        nums[j] = nums[i];
+                        // incrementing  postion to place the next non zero element
+                        j++; 
+                    }
+                }
+                // using for loop to fill remaining posistions to zero
+                for (int i = j; i < n; i++)
+                {
+                    // assigning the value to zero
+                    nums[i] = 0; 
+                }
+                // returning the new array
+                return new List<int>(nums);
+                
             }
             catch (Exception)
             {
@@ -186,7 +238,68 @@ namespace ISM6225_Spring_2024_Assignment_2
             try
             {
                 // Write your code here and you can modify the return value according to the requirements
-                return new List<IList<int>>();
+                // Initializing the result list to store the triplets                                             
+                IList<IList<int>> result = new List<IList<int>>();
+                // Sorting the array to handle duplicates 
+                Array.Sort(nums);
+                // to fine Length of the array
+                int n = nums.Length;
+                //corner case: If the array has less than 3 elements, it's not possible to find triplets
+                if (n < 3)
+                {
+                    return new List<IList<int>>(result);
+
+                }
+                    
+                // Fixing the first element (i) and using two pointers (j and k) to find the other two elements
+                for (int i = 0; i < n - 2; i++) 
+                {
+                    // Skip duplicate values for i
+                    if (i > 0 && nums[i] == nums[i - 1])
+                        continue;
+
+                    //Initializing j pointer
+                    int j = i + 1;
+                    // Initializing k pointer
+                    int k = n - 1;
+
+                    // Iterating while left pointer is less than right pointer
+                    while (j < k) 
+                    {
+                        // Calculating the sum of three elements
+                        int sum = nums[i] + nums[j] + nums[k];
+
+                        // If sum is zero, adding the triplet to the result list
+                        if (sum == 0) 
+                        {
+                            result.Add(new List<int> { nums[i], nums[j], nums[k] });
+
+                            // Skipping duplicate values for j pointer
+                            while (j < k && nums[j] == nums[j + 1])
+                                j++;
+
+                            // Skipping duplicate values for k pointer
+                            while (j < k && nums[k] == nums[k - 1])
+                                k--;
+
+                            // Moving j pointer forward and k pointer backward
+                            j++;
+                            k--;
+                        }
+                        // If sum is less than zero, moving j pointer forward
+                        else if (sum < 0)
+                        {
+                            j++;
+                        }
+                        // If sum is greater than zero, moving k pointer backward
+                        else
+                        {
+                            k--;
+                        }
+                    }
+                }
+                // returning multiple  triplets as array
+                return new List<IList<int>>(result);
             }
             catch (Exception)
             {
@@ -220,8 +333,44 @@ namespace ISM6225_Spring_2024_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return 0;
+                // Write your code here and you can modify the return value according to the requirement
+                // corner case:Check if the array is empty
+                if (nums.Length == 0)
+                {
+                    return 0;
+                }
+                // Initialize variables to track maximum consecutive  and current consecutive 
+                int maxConsecutive = 0;
+                int currentConsecutive = 0;
+
+                // Iterating through the array
+                foreach (int num in nums)
+                {
+                    // If current element is 1, incrementing current consecutive  count
+                    if (num == 1)
+                    {
+                        currentConsecutive++;
+                    }
+                    else
+                    {
+                        // If current element is 0, updating max consecutive if needed
+                        if (currentConsecutive > maxConsecutive)
+                        {
+                            maxConsecutive = currentConsecutive;
+                        }
+                        // Resetting current consecutive ones count
+                        currentConsecutive = 0;
+                    }
+                }
+
+                // Checking and updating max consecutive ones for the last sequence if needed
+                if (currentConsecutive > maxConsecutive)
+                {
+                    maxConsecutive = currentConsecutive;
+                }
+
+                // Returning the maximum consecutive ones count
+                return maxConsecutive;
             }
             catch (Exception)
             {
@@ -256,8 +405,39 @@ namespace ISM6225_Spring_2024_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return 0;
+                // corner case:Checking if the binary input is within the specified range
+                if (binary < 1 || binary > 1000000000)
+                {
+                    throw new ArgumentOutOfRangeException("binary", "Input binary number must be between 1 and 10^9.");
+                }
+
+                int decimalValue = 0;
+                int baseValue = 1; // Initializing the base value for binary to decimal conversion
+
+                // Iterating through each digit of the binary number from right to left
+                while (binary > 0)
+                {
+                    // Getting the rightmost digit of the binary number
+                    int lastDigit = binary % 10;
+
+                    // corner case:Checking if the digit is a valid binary digit (0 or 1)
+                    if (lastDigit != 0 && lastDigit != 1)
+                    {
+                        throw new ArgumentException("Input is not a valid binary number.");
+                    }
+
+                    // Updating the decimal value by adding the product of the last digit and the base value
+                    decimalValue += lastDigit * baseValue;
+
+                    // Updating the base value by multiplying it by 2 for the next iteration
+                    baseValue *= 2;
+
+                    // Removing the rightmost digit from the binary number
+                    binary /= 10;
+                }
+
+                // Returning the decimal value
+                return decimalValue;
             }
             catch (Exception)
             {
@@ -294,8 +474,28 @@ namespace ISM6225_Spring_2024_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return 0;
+                // cornerCase:Checking if the array has less than two elements
+                if (nums.Length < 2)
+                    return 0;
+
+                // Sorting the array
+                Array.Sort(nums);
+
+                // Initializing the maximum gap to 0
+                int maxGap = 0;
+
+                // Iterating through the array to find the maximum difference between successive elements
+                for (int i = 1; i < nums.Length; i++)
+                {
+                    // Calculating the difference between successive elements
+                    int currentGap = nums[i] - nums[i - 1];
+
+                    // Updating the maximum gap if the current gap is greater
+                    if (currentGap > maxGap)
+                        maxGap = currentGap;
+                }
+
+                return maxGap;
             }
             catch (Exception)
             {
@@ -334,8 +534,26 @@ namespace ISM6225_Spring_2024_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
+                // corner case:Checking if the array length is less than 3, as it's not possible to form a triangle with less than three sides
+                if (nums.Length < 3)
+                    return 0;
+
+                // Sorting the array in non-decreasing order
+                Array.Sort(nums);
+
+                // Iterating from the end of the array to find the largest perimeter
+                for (int i = nums.Length - 1; i >= 2; i--)
+                {
+                    // Checking if it's possible to form a triangle with the current side length and the two preceding side lengths
+                    if (nums[i] < nums[i - 1] + nums[i - 2])
+                    {
+                        return nums[i] + nums[i - 1] + nums[i - 2]; // Return the largest perimeter
+                    }
+                }
+
+                // Corner case:If no valid triangle can be formed, returning 0
                 return 0;
+            
             }
             catch (Exception)
             {
@@ -388,8 +606,27 @@ namespace ISM6225_Spring_2024_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return "";
+                // corner case:Checking if either input string is empty
+                if (string.IsNullOrEmpty(s) || string.IsNullOrEmpty(part))
+                {
+                    return s;
+                }
+                // corner case:Converting both the input string and substring to lowercase
+                s = s.ToLower();
+                part = part.ToLower();
+
+                // Iterating until all occurrences of 'part' are removed from 's'
+                while (s.Contains(part))
+                {
+                    // Finding the index of the leftmost occurrence of 'part'
+                    int index = s.IndexOf(part);
+
+                    // Removing 'part' starting from the leftmost occurrence
+                    s = s.Remove(index, part.Length);
+                }
+
+                // Returning the modified string after removing all occurrences of 'part'
+                return s;
             }
             catch (Exception)
             {
